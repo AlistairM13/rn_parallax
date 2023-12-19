@@ -1,118 +1,182 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- */
 
-import React from 'react';
-import type {PropsWithChildren} from 'react';
+import { useRef } from "react";
 import {
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
-  StyleSheet,
-  Text,
-  useColorScheme,
+  Animated,
+  Dimensions,
   View,
+  StyleSheet,
 } from 'react-native';
+import LinearGradient from "react-native-linear-gradient";
 
-import {
-  Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
+const { width, height } = Dimensions.get('window');
+const ITEM_WIDTH = width * 0.75;
+const ITEM_HEIGHT = ITEM_WIDTH * 1.5;
 
-type SectionProps = PropsWithChildren<{
-  title: string;
-}>;
 
-function Section({children, title}: SectionProps): React.JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
-  return (
-    <View style={styles.sectionContainer}>
-      <Text
-        style={[
-          styles.sectionTitle,
-          {
-            color: isDarkMode ? Colors.white : Colors.black,
-          },
-        ]}>
-        {title}
-      </Text>
-      <Text
-        style={[
-          styles.sectionDescription,
-          {
-            color: isDarkMode ? Colors.light : Colors.dark,
-          },
-        ]}>
-        {children}
-      </Text>
-    </View>
-  );
-}
+const DATA = [
+  {
+    title: "Cyberpunk",
+    poster: require("./images/cyberpunk_poster.jpg"),
+    backdrop: require("./images/cyberpunk_backdrop.jpg"),
+  },
+  {
+    title: "DOOM Eternal",
+    poster: require("./images/doom_poster.jpg"),
+    backdrop: require("./images/doom_backdrop.jpg"),
+  },
+  {
+    title: "Ghostrunner",
+    poster: require("./images/ghostrunner_poster.jpg"),
+    backdrop: require("./images/ghostrunner_backdrop.jpg"),
+  },
+  {
+    title: "The Last of Us",
+    poster: require("./images/thelastofus_poster.jpg"),
+    backdrop: require("./images/thelastofus_backdrop.jpg"),
+  },
+  {
+    title: "Witcher 3: Wild Hunt",
+    poster: require("./images/witcher3_poster.jpg"),
+    backdrop: require("./images/witcher3_backdrop.jpg"),
+  },
+  {
+    title: "Ghost of Tsushima",
+    poster: require("./images/ghostoftsushima_poster.jpg"),
+    backdrop: require("./images/ghostoftsushima_backdrop.jpg"),
+  },
+]
 
 function App(): React.JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
-
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
-  };
+  const scrollY = useRef(new Animated.Value(0)).current
 
   return (
-    <SafeAreaView style={backgroundStyle}>
-      <StatusBar
-        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-        backgroundColor={backgroundStyle.backgroundColor}
-      />
-      <ScrollView
-        contentInsetAdjustmentBehavior="automatic"
-        style={backgroundStyle}>
-        <Header />
-        <View
-          style={{
-            backgroundColor: isDarkMode ? Colors.black : Colors.white,
+    <View style={styles.container}>
+      <View>
+        {DATA.map((game, index) => {
+          const inputRange = [
+            (index - 1) * height,
+            index * height,
+            (index + 1) * height
+          ]
+
+          const opacity = scrollY.interpolate({
+            inputRange,
+            outputRange: [0, 1, 0]
+          })
+
+          return <Animated.Image
+            key={game.title}
+            source={game.backdrop}
+            style={{
+              opacity,
+              objectFit: "cover",
+              position: "absolute",
+              height,
+              width
+            }}
+            blurRadius={5}
+          />
+        })}
+      </View>
+      <Animated.FlatList
+        data={DATA}
+        onScroll={Animated.event(
+          [{ nativeEvent: { contentOffset: { y: scrollY } } }],
+          { useNativeDriver: true }
+        )}
+        snapToInterval={height}
+        decelerationRate="fast"
+        snapToAlignment="center"
+        showsVerticalScrollIndicator={false}
+        keyExtractor={item => item.title}
+        renderItem={({ item, index }) => {
+          const inputRange = [
+            (index - 1) * height,
+            index * height,
+            (index + 1) * height
+          ]
+
+          const translateY = scrollY.interpolate({
+            inputRange,
+            outputRange: [-height * 0.7, 0, height * 0.7]
+          })
+
+          return <View style={{
+            width,
+            height,
+            alignItems: 'center',
+            justifyContent: 'center',
           }}>
-          <Section title="Step One">
-            Edit <Text style={styles.highlight}>App.tsx</Text> to change this
-            screen and then come back to see your edits.
-          </Section>
-          <Section title="See Your Changes">
-            <ReloadInstructions />
-          </Section>
-          <Section title="Debug">
-            <DebugInstructions />
-          </Section>
-          <Section title="Learn More">
-            Read the docs to discover what to do next:
-          </Section>
-          <LearnMoreLinks />
-        </View>
-      </ScrollView>
-    </SafeAreaView>
-  );
+            <View
+              style={{
+                width: ITEM_WIDTH,
+                height: ITEM_HEIGHT,
+                overflow: "hidden",
+                alignItems: "center",
+                justifyContent: "center",
+                position: "relative",
+                borderRadius: 16,
+              }}
+            >
+              <Animated.Image
+                source={item.poster}
+                style={{
+                  width: ITEM_WIDTH,
+                  height: ITEM_HEIGHT * 1.1,
+                  resizeMode: 'cover',
+                  borderRadius: 16,
+                  transform: [
+                    { translateY }
+                  ]
+                }}
+              />
+              <Animated.Text style={{
+                fontSize: 30,
+                textTransform: "capitalize",
+                position: "absolute",
+                bottom: 10,
+                zIndex: 4,
+                color: "white",
+                transform: [
+                  { translateY }
+                ]
+              }}>{item.title}</Animated.Text>
+              <Animated.View
+                style={{
+                  height: "100%",
+                  width: "100%",
+                  position: "absolute",
+                  transform: [
+                    { translateY }
+                  ]
+                }}
+              >
+                <LinearGradient
+                  colors={["transparent", "transparent", "black"]}
+                  style={{
+                    height: "105%",
+                    width: "100%",
+                    borderRadius: 16
+                  }}
+                />
+
+              </Animated.View>
+
+            </View>
+          </View>
+        }}
+      />
+    </View >
+  )
 }
 
-const styles = StyleSheet.create({
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
-  },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
-  },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-  },
-  highlight: {
-    fontWeight: '700',
-  },
-});
+
 
 export default App;
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
+  },
+});
