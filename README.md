@@ -2,6 +2,9 @@
 
 This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
 
+## Preview
+![task_gif](https://github.com/AlistairM13/rn_parallax/assets/105148183/ca36e7f5-00d8-4cd8-a7ba-a1dd98ef7f1e)
+
 
 # Steps to run the app
 ## Step 1: Start the Metro Server
