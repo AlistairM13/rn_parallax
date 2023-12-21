@@ -7,6 +7,7 @@ import {
     StyleSheet,
     Text,
     GestureResponderEvent,
+    StatusBar,
 } from 'react-native';
 import LinearGradient from "react-native-linear-gradient";
 import { StackScreenProps } from '@react-navigation/stack';
@@ -14,45 +15,14 @@ import { SharedElement } from 'react-navigation-shared-element';
 import { Game, RootStackParamList } from "../App";
 import Icon from "react-native-vector-icons/Ionicons";
 
+import {DATA} from '../utils/data'
 
 
-const { width, height } = Dimensions.get('window');
+const { width, height: wHeight } = Dimensions.get('window');
+const height = wHeight + (StatusBar.currentHeight || 32)
 const ITEM_WIDTH = width * 0.75;
 const ITEM_HEIGHT = ITEM_WIDTH * 1.5;
 
-
-const DATA = [
-    {
-        title: "Cyberpunk 2077",
-        poster: require("../images/cyberpunk_poster.jpg"),
-        backdrop: require("../images/cyberpunk_backdrop.jpg"),
-    },
-    {
-        title: "DOOM Eternal",
-        poster: require("../images/doom_poster.jpg"),
-        backdrop: require("../images/doom_backdrop.jpg"),
-    },
-    {
-        title: "Ghostrunner",
-        poster: require("../images/ghostrunner_poster.jpg"),
-        backdrop: require("../images/ghostrunner_backdrop.jpg"),
-    },
-    {
-        title: "The Last of Us",
-        poster: require("../images/thelastofus_poster.jpg"),
-        backdrop: require("../images/thelastofus_backdrop.jpg"),
-    },
-    {
-        title: "Witcher 3: Wild Hunt",
-        poster: require("../images/witcher3_poster.jpg"),
-        backdrop: require("../images/witcher3_backdrop.jpg"),
-    },
-    {
-        title: "Ghost of Tsushima",
-        poster: require("../images/ghostoftsushima_poster.jpg"),
-        backdrop: require("../images/ghostoftsushima_backdrop.jpg"),
-    },
-]
 
 type HomeProps = StackScreenProps<RootStackParamList, "Home">
 
@@ -155,72 +125,76 @@ export default ({ navigation }: HomeProps): React.JSX.Element => {
     const scrollY = useRef(new Animated.Value(0)).current
 
     return (
-        <View style={styles.container}>
-            <View>
-                {DATA.map((game, index) => {
-                    const inputRange = [
-                        (index - 1) * height,
-                        index * height,
-                        (index + 1) * height
-                    ]
+        <>
+            <StatusBar translucent backgroundColor="transparent" />
 
-                    const opacity = scrollY.interpolate({
-                        inputRange,
-                        outputRange: [0, 1, 0]
-                    })
+            <View style={styles.container}>
+                <View>
+                    {DATA.map((game, index) => {
+                        const inputRange = [
+                            (index - 1) * height,
+                            index * height,
+                            (index + 1) * height
+                        ]
 
-                    return <Animated.Image
-                        key={game.title}
-                        source={game.backdrop}
-                        style={{
-                            opacity,
-                            objectFit: "cover",
-                            position: "absolute",
-                            height,
-                            width
-                        }}
-                        blurRadius={5}
-                    />
-                })}
-            </View>
-            <Animated.FlatList
-                data={DATA}
-                onScroll={Animated.event(
-                    [{ nativeEvent: { contentOffset: { y: scrollY } } }],
-                    { useNativeDriver: true }
-                )}
-                snapToInterval={height}
-                decelerationRate="fast"
-                snapToAlignment="center"
-                showsVerticalScrollIndicator={false}
-                keyExtractor={game => game.title}
-                renderItem={({ item: game, index }) => {
-                    const inputRange = [
-                        (index - 1) * height,
-                        index * height,
-                        (index + 1) * height
-                    ]
+                        const opacity = scrollY.interpolate({
+                            inputRange,
+                            outputRange: [0, 1, 0]
+                        })
 
-                    const translateY = scrollY.interpolate({
-                        inputRange,
-                        outputRange: [-height * 0.7, 0, height * 0.7]
-                    })
-
-                    return <View style={{
-                        width,
-                        height,
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                    }}>
-                        <GameCard
-                            onPress={() => navigation.navigate("Details", { game })}
-                            game={game}
-                            translateY={translateY}
+                        return <Animated.Image
+                            key={game.title}
+                            source={game.backdrop}
+                            style={{
+                                opacity,
+                                objectFit: "cover",
+                                position: "absolute",
+                                height,
+                                width
+                            }}
+                            blurRadius={5}
                         />
-                    </View>
-                }}
-            />
-        </View >
+                    })}
+                </View>
+                <Animated.FlatList
+                    data={DATA}
+                    onScroll={Animated.event(
+                        [{ nativeEvent: { contentOffset: { y: scrollY } } }],
+                        { useNativeDriver: true }
+                    )}
+                    snapToInterval={height}
+                    decelerationRate="fast"
+                    snapToAlignment="center"
+                    showsVerticalScrollIndicator={false}
+                    keyExtractor={game => game.title}
+                    renderItem={({ item: game, index }) => {
+                        const inputRange = [
+                            (index - 1) * height,
+                            index * height,
+                            (index + 1) * height
+                        ]
+
+                        const translateY = scrollY.interpolate({
+                            inputRange,
+                            outputRange: [-height * 0.7, 0, height * 0.7]
+                        })
+
+                        return <View style={{
+                            width,
+                            height,
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                        }}>
+                            <GameCard
+                                onPress={() => navigation.navigate("Details", { game })}
+                                game={game}
+                                translateY={translateY}
+                            />
+                        </View>
+                    }}
+                />
+            </View >
+        </>
     )
 }
 

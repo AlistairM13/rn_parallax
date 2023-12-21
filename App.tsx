@@ -17,7 +17,6 @@ export type RootStackParamList = {
 
 const Stack = createSharedElementStackNavigator<RootStackParamList>();
 
-
 function App(): React.JSX.Element {
   return (
     <NavigationContainer>
@@ -32,7 +31,6 @@ function App(): React.JSX.Element {
     </NavigationContainer>
   )
 }
-
 
 export default App;
 

@@ -1,4 +1,4 @@
-import {  View, Text, Image, Dimensions, Animated } from 'react-native';
+import { View, Text, Image, Dimensions, Animated, StatusBar } from 'react-native';
 import { useEffect, useRef } from "react";
 import { StackScreenProps } from '@react-navigation/stack';
 import { RouteProp } from "@react-navigation/native";
@@ -9,7 +9,9 @@ import LinearGradient from "react-native-linear-gradient";
 
 import { RootStackParamList } from "../App";
 
-const { width, height } = Dimensions.get('window');
+const { width, height: wHeight } = Dimensions.get('window');
+const height = wHeight + (StatusBar.currentHeight || 32)
+
 type DetailProps = StackScreenProps<RootStackParamList, "Details">
 
 export default function DetailScreen({ route, navigation }: DetailProps): React.JSX.Element {
@@ -31,6 +33,7 @@ export default function DetailScreen({ route, navigation }: DetailProps): React.
 
     return (
         <>
+            <StatusBar translucent backgroundColor="transparent" />
             <SharedElement id={game.title}>
                 <Image
                     style={{ width, height }}
@@ -50,11 +53,12 @@ export default function DetailScreen({ route, navigation }: DetailProps): React.
                     style={{ flex: 1 }}
                     colors={["black", "transparent", "transparent", "transparent", "black", "black"]}
                 >
-                    <View style={{ flex: 1, paddingHorizontal: 40, paddingVertical: 30, justifyContent: "space-between" }}>
+                    <View style={{ flex: 1, padding: 40, justifyContent: "space-between" }}>
                         <View
                             style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}
                         >
                             <Icon
+                                color="white"
                                 onPress={navigation.goBack}
                                 name="arrow-back"
                                 size={25}
@@ -72,8 +76,9 @@ export default function DetailScreen({ route, navigation }: DetailProps): React.
                                 <Icon
                                     name="game-controller"
                                     size={35}
+                                    color="white"
                                     style={{
-                                        transform: [{ rotate: "45deg" }]
+                                        transform: [{ rotate: "-45deg" }]
                                     }}
                                 />
                             </View>
