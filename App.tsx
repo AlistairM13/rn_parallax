@@ -4,7 +4,7 @@ import HomeScreen from "./screens/HomeScreen";
 import DetailScreen from "./screens/DetailsScreen";
 
 
-interface Game {
+export interface Game {
   title: string;
   poster: any;
   backdrop: any;

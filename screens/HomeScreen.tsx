@@ -1,15 +1,18 @@
-import { useRef } from "react";
+import { memo, useRef } from "react";
 import {
     Animated,
     Dimensions,
     View,
     Pressable,
     StyleSheet,
+    Text,
+    GestureResponderEvent,
 } from 'react-native';
 import LinearGradient from "react-native-linear-gradient";
 import { StackScreenProps } from '@react-navigation/stack';
 import { SharedElement } from 'react-navigation-shared-element';
-import { RootStackParamList } from "../App";
+import { Game, RootStackParamList } from "../App";
+import Icon from "react-native-vector-icons/Ionicons";
 
 
 
@@ -20,7 +23,7 @@ const ITEM_HEIGHT = ITEM_WIDTH * 1.5;
 
 const DATA = [
     {
-        title: "Cyberpunk",
+        title: "Cyberpunk 2077",
         poster: require("../images/cyberpunk_poster.jpg"),
         backdrop: require("../images/cyberpunk_backdrop.jpg"),
     },
@@ -52,6 +55,101 @@ const DATA = [
 ]
 
 type HomeProps = StackScreenProps<RootStackParamList, "Home">
+
+const GameCard = memo(({
+    game,
+    translateY,
+    onPress
+}: {
+    game: Game,
+    translateY: Animated.AnimatedInterpolation<string | number>,
+    onPress: (event: GestureResponderEvent) => void
+}) => (
+    <Pressable
+        onPress={onPress}
+        style={{
+            width: ITEM_WIDTH,
+            height: ITEM_HEIGHT,
+            overflow: "hidden",
+            alignItems: "center",
+            justifyContent: "center",
+            position: "relative",
+            borderRadius: 16,
+        }}
+    >
+        <SharedElement id={game.title}>
+            <Animated.Image
+                source={game.poster}
+                style={{
+                    width: ITEM_WIDTH,
+                    height: ITEM_HEIGHT * 1.1,
+                    resizeMode: 'cover',
+                    borderRadius: 16,
+                    transform: [
+                        { translateY }
+                    ]
+                }}
+            />
+        </SharedElement>
+        <Animated.View
+            style={{
+                position: "absolute",
+                flexDirection: "row",
+                alignItems: "center",
+                width: "100%",
+                paddingHorizontal: 16,
+                paddingBottom: 8,
+                justifyContent: "space-between",
+                bottom: 10,
+                zIndex: 4,
+                transform: [
+                    { translateY }
+                ]
+            }}
+        >
+            <Text style={{
+                fontSize: 20,
+                textTransform: "capitalize",
+                color: "white",
+            }}>{game.title}</Text>
+            <View
+                style={{
+                    width: 30,
+                    height: 30,
+                    borderRadius: 40,
+                    backgroundColor: "#0A79DF",
+                    justifyContent: "center",
+                    alignItems: "center"
+                }}
+            >
+                <Icon
+                    name="add"
+                    size={20}
+                    color="white"
+                />
+            </View>
+        </Animated.View>
+        <Animated.View
+            style={{
+                height: "100%",
+                width: "100%",
+                position: "absolute",
+                transform: [
+                    { translateY }
+                ]
+            }}
+        >
+            <LinearGradient
+                colors={["transparent", "transparent", "black"]}
+                style={{
+                    height: "105%",
+                    width: "100%",
+                    borderRadius: 16
+                }}
+            />
+        </Animated.View>
+    </Pressable>
+));
 
 export default ({ navigation }: HomeProps): React.JSX.Element => {
     const scrollY = useRef(new Animated.Value(0)).current
@@ -114,64 +212,11 @@ export default ({ navigation }: HomeProps): React.JSX.Element => {
                         alignItems: 'center',
                         justifyContent: 'center',
                     }}>
-                        <Pressable
+                        <GameCard
                             onPress={() => navigation.navigate("Details", { game })}
-                            style={{
-                                width: ITEM_WIDTH,
-                                height: ITEM_HEIGHT,
-                                overflow: "hidden",
-                                alignItems: "center",
-                                justifyContent: "center",
-                                position: "relative",
-                                borderRadius: 16,
-                            }}
-                        >
-                            <SharedElement id={game.title}>
-                                <Animated.Image
-                                    source={game.poster}
-                                    style={{
-                                        width: ITEM_WIDTH,
-                                        height: ITEM_HEIGHT * 1.1,
-                                        resizeMode: 'cover',
-                                        borderRadius: 16,
-                                        transform: [
-                                            { translateY }
-                                        ]
-                                    }}
-                                />
-                            </SharedElement>
-                            <Animated.Text style={{
-                                fontSize: 30,
-                                textTransform: "capitalize",
-                                position: "absolute",
-                                bottom: 10,
-                                zIndex: 4,
-                                color: "white",
-                                transform: [
-                                    { translateY }
-                                ]
-                            }}>{game.title}</Animated.Text>
-                            <Animated.View
-                                style={{
-                                    height: "100%",
-                                    width: "100%",
-                                    position: "absolute",
-                                    transform: [
-                                        { translateY }
-                                    ]
-                                }}
-                            >
-                                <LinearGradient
-                                    colors={["transparent", "transparent", "black"]}
-                                    style={{
-                                        height: "105%",
-                                        width: "100%",
-                                        borderRadius: 16
-                                    }}
-                                />
-
-                            </Animated.View>
-                        </Pressable>
+                            game={game}
+                            translateY={translateY}
+                        />
                     </View>
                 }}
             />
@@ -181,7 +226,7 @@ export default ({ navigation }: HomeProps): React.JSX.Element => {
 
 const styles = StyleSheet.create({
     container: {
-      flex: 1,
-      backgroundColor: '#fff',
+        flex: 1,
+        backgroundColor: '#fff',
     },
-  });
+});
