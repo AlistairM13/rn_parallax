@@ -6,17 +6,15 @@ import { SharedElement } from 'react-navigation-shared-element';
 import { TouchableOpacity } from "react-native-gesture-handler";
 import Icon from 'react-native-vector-icons/Ionicons';
 import LinearGradient from "react-native-linear-gradient";
+import { getDefaultHeaderHeight, useHeaderHeight } from '@react-navigation/elements';
 
 import { RootStackParamList } from "../App";
 
-const { width, height: wHeight } = Dimensions.get('window');
-const height = wHeight + (StatusBar.currentHeight || 32)
-
+const { width, height} = Dimensions.get('window');
 type DetailProps = StackScreenProps<RootStackParamList, "Details">
 
 export default function DetailScreen({ route, navigation }: DetailProps): React.JSX.Element {
     const { game } = route.params
-
     const fadeAnim = useRef(new Animated.Value(0)).current;
 
     const startFadeInAnimation = () => {
@@ -33,7 +31,6 @@ export default function DetailScreen({ route, navigation }: DetailProps): React.
 
     return (
         <>
-            <StatusBar translucent backgroundColor="transparent" />
             <SharedElement id={game.title}>
                 <Image
                     style={{ width, height }}
@@ -44,7 +41,7 @@ export default function DetailScreen({ route, navigation }: DetailProps): React.
             <Animated.View
                 style={{
                     position: "absolute",
-                    height,
+                    height:"100%",
                     width,
                     opacity: fadeAnim, // Bind opacity to the fadeAnim value
                 }}
@@ -53,7 +50,7 @@ export default function DetailScreen({ route, navigation }: DetailProps): React.
                     style={{ flex: 1 }}
                     colors={["black", "transparent", "transparent", "transparent", "black", "black"]}
                 >
-                    <View style={{ flex: 1, padding: 40, justifyContent: "space-between" }}>
+                    <View style={{ flex: 1, paddingHorizontal: 40, paddingVertical: 20, justifyContent: "space-between" }}>
                         <View
                             style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}
                         >
@@ -77,9 +74,6 @@ export default function DetailScreen({ route, navigation }: DetailProps): React.
                                     name="game-controller"
                                     size={35}
                                     color="white"
-                                    style={{
-                                        transform: [{ rotate: "-45deg" }]
-                                    }}
                                 />
                             </View>
                         </View>
