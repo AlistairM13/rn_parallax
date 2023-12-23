@@ -3,7 +3,12 @@
 This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
 
 ## Preview
+### Old
 ![task_gif](https://github.com/AlistairM13/rn_parallax/assets/105148183/ca36e7f5-00d8-4cd8-a7ba-a1dd98ef7f1e)
+
+### New
+![rn_task](https://github.com/AlistairM13/rn_parallax/assets/105148183/afdf8c17-8d03-4136-810a-e945d00b50ed)
+
 
 
 # Steps to run the app
