@@ -40,9 +40,9 @@ export default ({ navigation }: HomeProps): React.JSX.Element => {
                     { useNativeDriver: true }
                 )}
                 ListHeaderComponent={
-                    <View style={{alignItems:"center", paddingVertical:20}}>
-                        <Text style={{ color: "#0A79DF", fontWeight:"bold", textTransform:"uppercase", fontSize:12 }}>Great games</Text>
-                        <Text style={{ color: "#333", fontWeight:"300", fontSize:35 }}>Coming soon</Text>
+                    <View style={{ alignItems: "center", paddingVertical: 20 }}>
+                        <Text style={{ color: "#0A79DF", fontWeight: "bold", textTransform: "uppercase", fontSize: 12 }}>Great games</Text>
+                        <Text style={{ color: "#333", fontWeight: "300", fontSize: 35 }}>Coming soon</Text>
                     </View>
                 }
                 contentContainerStyle={{ alignItems: "center" }}
@@ -59,19 +59,18 @@ export default ({ navigation }: HomeProps): React.JSX.Element => {
                         ]
                     })
                     return (
-
                         <Pressable
                             onPress={() => navigation.navigate("Details", { game })}
                             style={{
                                 width: ITEM_WIDTH,
                                 height: ITEM_HEIGHT,
-                                overflow: "hidden",
                                 justifyContent: "center",
                                 marginBottom: 32,
                                 borderRadius: 16,
                                 elevation: 16,
+                                shadowColor:"black",
+                                overflow: "hidden",
                                 position: "relative",
-                                shadowColor: "black"
                             }}
                         >
                             <SharedElement id={game.title}>
@@ -86,6 +85,7 @@ export default ({ navigation }: HomeProps): React.JSX.Element => {
                                     resizeMode="cover"
                                 />
                             </SharedElement>
+
                             <View
                                 style={{
                                     position: "absolute",

@@ -10,7 +10,6 @@ import { useState } from "react";
 export interface Game {
   title: string;
   poster: any;
-  backdrop: any;
 }
 
 export type RootStackParamList = {
